@@ -3,17 +3,21 @@ import { Button } from '@/components/ui/button'
 import React, { useEffect, useState } from 'react'
 import "./styles.css";
 import { AuroraText } from '@/components/magicui/aurora-text';
-import { Mic, Search, SendHorizonal } from 'lucide-react';
+import { Brain, Mic, MoonStar, Search, SendHorizonal, Sun } from 'lucide-react';
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { WordRotate } from "@/components/magicui/word-rotate";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { signout } from "@/lib/auth-actions";
+import { useCounterStore } from '@/app/store';
 
 function LandingPage() {
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
   const supabase = createClient();
+  const { theme, userData } = useCounterStore();
+  const setTheme = useCounterStore((state) => state.setTheme);
+  const setUserData = useCounterStore((state) => state.setUserData);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,27 +25,51 @@ function LandingPage() {
         data: { user },
       } = await supabase.auth.getUser();
       setUser(user);
-      console.log(user);
+      if (user) {
+        setUserData(user)
+      }
     };
-    fetchUser();
+    if (Object.keys(userData).length==0) {
+      fetchUser();
+    }
   }, []);
 
   const rotatoryTextInputUI = ["Find my meeting notes from last month...", "What ideas did I come up with yesterday?", "When did I drink coffee today?"]
 
   return (
     <div className='landing-page-main'>
+      {/* ---------------------------------------- FIXED ELEMENTS ---------------------------------------- */}
+      <div className='fixed top-6 right-7 flex items-center gap-8 z-2'>
+        {theme == "dark" ? (
+          <Sun onClick={() => {
+            setTheme("light");
+          }}/>
+        ):(
+          <MoonStar onClick={() => {
+            setTheme("dark");
+          }}/>
+        )}
+      </div>
+      <div className="fixed left-7 top-7">
+        <div className='flex items-center gap-2'>
+          <Brain/>
+          <h3 className='text-xl font-bold'>BrainOS</h3>
+        </div>
+      </div>
+      {/* ------------------------------------------------------------------------------------------------ */}
       <div id="banner" className='banner flex items-center justify-center flex-col h-screen gap-5'>
+        <br/>
         <h1 className='text-center mb-2'>Make your brain <br/><AuroraText>searchable</AuroraText></h1>
         <h3 className='text-md font-bold text-neutral-400 w-[30%] text-center'>Capture every thought, note, and idea, and find them in seconds with BrainOS.</h3>
         {user ? (
-        <InteractiveHoverButton className='border-neutral-400'>Go to dashboard</InteractiveHoverButton>
+        <InteractiveHoverButton onClick={() => router.push("/Dashboard")} className='border-neutral-400'>Go to dashboard</InteractiveHoverButton>
         ):(
         <InteractiveHoverButton onClick={() => {
           router.push("/login");
         }} className='border-neutral-400'>Get started</InteractiveHoverButton>
         )}
         <div className="mt-10 w-full max-w-3xl reveal rounded-full shadow-md">
-          <div className="glass px-5 py-3 flex items-center justify-between gap-3 shadow-elegant pr-5">
+          <div className={`glass px-5 py-3 flex items-center ${theme == "dark" ? "border rounded-md" : ""} justify-between gap-3 shadow-elegant pr-5`}>
             <div className='flex items-center gap-3'>
               <Search className="h-5 w-5 text-muted-foreground" />
               <span className="text-muted-foreground"><WordRotate words={rotatoryTextInputUI} /></span>

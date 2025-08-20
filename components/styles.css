@@ -1,0 +1,33 @@
+.banner {
+  /* background: linear-gradient(to right,
+  rgba(255, 153, 204, 0.668) 0%, 
+  rgb(255, 255, 255) 10%, 
+  rgb(255, 255, 255) 90%,
+  rgba(255, 204, 153, 0.838) 100%
+  ); */
+}
+
+.banner > h1 {
+  font-family: "Poppins", sans-serif;
+  font-optical-sizing: auto;
+  font-weight:400;
+  letter-spacing: -1px;
+  font-size: 8vh;
+  line-height: 100%;
+}
+
+button {
+  /* font-family: "Hedvig Letters Serif", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal; */
+}
+
+#sec-1 {
+  background: linear-gradient(to right,
+  rgba(255, 153, 204, 0.668) 0%,   /* Pinkish start on left */
+  rgb(255, 255, 255) 10%,       /* Transition to solid gray quickly */
+  rgb(255, 255, 255) 90%,       /* Stay solid gray across most of the middle */
+  rgba(255, 204, 153, 0.838) 100% /* Yellowish end on right */
+);
+}
